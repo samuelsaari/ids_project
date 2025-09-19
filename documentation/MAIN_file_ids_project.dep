@@ -134,13 +134,15 @@
   *{package}{logreq}      {2010/08/04 v1.0}
   *{file}   {logreq.def}  {2010/08/04 v1.0}
   *{file}   {blx-dm.def}  {2024/03/21 v3.20}
-  *{file}   {apa.dbx}     {2023/03/20 v9.17}
   *{file}   {blx-unicode.def}{0000/00/00 v0.0}
   *{file}   {blx-compat.def}{2024/03/21 v3.20}
   *{file}   {biblatex.def}{2024/03/21 v3.20}
   *{file}   {standard.bbx}{2024/03/21 v3.20}
-  *{file}   {apa.bbx}     {2023/03/20 v9.17}
-  *{file}   {apa.cbx}     {2023/03/20 v9.17}
+  *{file}   {numeric.bbx} {2024/03/21 v3.20}
+  *{file}   {numeric-comp.bbx}{2024/03/21 v3.20}
+  *{file}   {ieee.bbx}    {2025-03-14 v1.4e}
+  *{file}   {numeric-verb.cbx}{2024/03/21 v3.20}
+  *{file}   {ieee.cbx}    {2025-03-14 v1.4e}
   *{file}   {biblatex.cfg}{0000/00/00 v0.0}
   *{package}{blx-case-expl3}{2024/03/21 v3.20}
   *{package}{bookmark}    {2023-12-10 v1.31}
@@ -157,8 +159,6 @@
   *{-------}{Document-specific files:}{----}
   *{package}{ltcaption}   {2021/01/08 v1.4c}
   *{file}   {english.lbx} {2024/03/21 v3.20}
-  *{file}   {english-apa.lbx}{2023/03/20 v9.17}
   *{file}   {american.lbx}{2024/03/21 v3.20}
-  *{file}   {american-apa.lbx}{2023/03/20 v9.17}
   *{file}   {MAIN_file_ids_project.bbl}{0000/00/00 v0.0}
 }
