@@ -37,21 +37,22 @@
 	
 	
 	\begin{singlespace}
-		\maketitle % Brings front page information from the 0Preamble-file
+	\maketitle % Brings front page information from the 0Preamble-file
 		
-		\begin{abstract}
-			{\parindent0pt % disables indentation for all the text between { and }
+	% 	\begin{abstract}
+	% 		{\parindent0pt % disables indentation for all the text between { and }
 				
-				\blindtext
+	% 			\blindtext
 				
-				\keywords{xx $\cdot$ yyy  }
-			}% Indent end
-			% consider summarising the main research questions /. hypotheses in the abstract -- at least 90% of people read only the abstract.
-		\end{abstract} \hspace{10pt}
+	% 			\keywords{xx $\cdot$ yyy  }
+	% 		}% Indent end
+	% 		consider summarising the main research questions /. hypotheses in the abstract -- at least 90% of people read only the abstract.
+	% 	\end{abstract} \hspace{10pt}
 		
 	\end{singlespace}
 
-	\newpage
+
+	% \newpage
 	
 	%%%%-----------------------------------------------
 	%%%% Introduction
@@ -62,7 +63,7 @@
 	%%%% Define a research territory (1)
 	%% General context of the work (1a)  
 	%% Narrower research area and statement of its importance (1b)
-	Play\textemdash coming together to engage in a common activity\textemdash is a human universal \autocite{brownHumanUniversalsHuman2004} and essential part in human development \autocite{smithPlayTypesFunctions2005,pellegriniRolePlayHuman2009}. Board games are a popular and accessible form of play that bring family, friends and strangers alike together, and promote well-being across the life-span \autocite{dellangelaBoardGamesEmotional2020,solway2011wellness}.
+	Play\textemdash coming together to engage in a common recreational activity\textemdash is a human universal \autocite{brownHumanUniversalsHuman2004} and essential part in human development \autocite{smithPlayTypesFunctions2005,pellegriniRolePlayHuman2009}. Board games are a popular and accessible form of play that bring family, friends and strangers alike together, and promote well-being across the life-span \autocite{dellangelaBoardGamesEmotional2020,solway2011wellness}.
 
 	%%%% Establish a niche (2)
 	%% Identification of a gap or other need for research (2a)
@@ -82,22 +83,31 @@
 	\section{Data}\label{data}
 
 	%BGG Data
+	We chose the biggest board game ratings database BoardGameGeek.com to fetch user ratings and board game metadata, such as playing mechanics and category. As it is openly available, it having a data access was simple and there were no data privacy issues to be addressed.
 
 	Since there are 2.7 million users  and 150.000 boardgames in BGG \autocite{didymus-trueBoardGameGeeksSupportDrive2024,wordsratedBoardGamesStatistics2025}, fetching all of them would not be feasible with the API interface, at least within this project. Since many users have left no or few reviews, the data would be too sparse if we had taken a random sample. To get a compromise between training matrix sparsity, time constraints and selection bias, we decided to choose x guilds (online discussion groups) that represent different geographic regions, target audiences (teens, parents, seniors), genres as well as general and special interest groups. This way we could get X reviews from Y reviewers about Z games. The sampling strategy did bias our distribution towards active users, but also allows for reliable training. Users with only few reviews would make the estimation computationally intensive and possibly unreliable.
+	
+	We decided to load our data via the BGG XML API \autocite{bbgBGGXMLAPI22025}. While the data is well preprocessed and clean, getting the data was no simple task.
 
+	First, the API has rate limits that we had to find out by trial and error. We used a base delay of .75 seconds and if the rate was limited, increased the delay exponentially and waited for the maximum of one minute. The maximum batch size for games was 20 and it took some time to find out why the game metadata coverage was so low on larger test runs.
+
+	Second, since the game metadata fetching was unreliable even with the exponential backoff time, we used a game metadata cachefile to make sure that if a game metadata had been fetched successfully once, it was stored  on the project home directory.
+
+	Finally, we included only users with at least 25 reviews and fetched the most popular games first to avoid training data matrix sparsity.
+	
+	
 	\section{Methods}\label{methods}
-	
-	We decided to load our data via the BGG XML API \autocite{BGGBGGXMLAPI22025}
-	
-	
 
+	Using review scores is the single best way of generating recommendations \autocite{epsteinRangeWhyGeneralists2021}. It seems counterintutive as one would think that categories, genres, sales or other available metadata would be equally helpful. Based on this empirical finding and the scope of the project, we chose to focus solely on the review scores.
+
+	
 	
 	%%%%-----------------------------------------------
 	%%%% Results
 	
 	\section{Results}\label{results}
 	
-	ölköljlkjölkölkjölkj
+	
 	
 	
 	
@@ -109,6 +119,8 @@
 	%%%% Discussion and conclusion
 	
 	\section{Discussion}\label{discussion}
+
+	We created a board game recommendation webpage based on a sample of 200.000 board game reviews from 1000 active BoarGameGeek.com users to help BoardGameGeek users\textemdash or anyone\textemdash find new boardgames that match their taste.
 	
 	%%%% Interpretation of results to answer research question
 	
@@ -123,6 +135,7 @@
 	
 	
 	%%%% Prospects for future research
+	If this project was expanded, we would use the whole BGG database as a training data %, and have an option to rate a curated list to get recommendations even without a BGG user account.
 	
 	% Conclusion for Article
 	
