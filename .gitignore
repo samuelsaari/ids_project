@@ -347,3 +347,6 @@ data/
 other_data/
 kaggle_data/
 logs/
+
+# Manually added
+__pycache__/
