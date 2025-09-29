@@ -347,4 +347,8 @@ data/
 other_data/
 kaggle_data/
 logs/
+
 img_ratings/
+
+# Manually added
+__pycache__/
