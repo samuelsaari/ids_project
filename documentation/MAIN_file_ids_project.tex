@@ -73,7 +73,7 @@
 	%%% Summary
 	% Summary of approach to answer the research question 3a
 	%Announcement of principal findings
-	This technical report will outline the steps we made to create a recommendation system for new board games based on the user's ratings in BoardGameGeek.com (BGG) database as well as the technical details of setting up a webpage *LINK TO WEBSITE* through which users can find recommendations for new board games. To achieve this, we used non-negative matrix factorization (NMF) with a selected users' review scores to create tailored suggestions for new board games.
+	This technical report will outline the steps we made and lessons learned to create a recommendation system for new board games based on the user's ratings in BoardGameGeek.com (BGG) database as well as the technical details of setting up a webpage *LINK TO WEBSITE* through which users can find recommendations for new board games. To achieve this, we used non-negative matrix factorization (NMF) with a selected users' review scores to create tailored suggestions for new board games.
 	
 	
 	%%%%-----------------------------------------------
@@ -98,7 +98,14 @@
 	
 	\section{Methods}\label{methods}
 
-	Using review scores is the single best way of generating recommendations \autocite{epsteinRangeWhyGeneralists2021}. It seems counterintutive as one would think that categories, genres, sales or other available metadata would be equally helpful. Based on this empirical finding and the scope of the project, we chose to focus solely on the review scores.
+	Using review scores is the single best way of generating recommendations \autocite{epsteinRangeWhyGeneralists2021}. It seems counterintutive as one would think that categories, genres, sales or other available metadata would be equally helpful. Based on this empirical finding and the scope of the project, we chose to focus solely on the review scores. Upon fetching the recommendations, we did, howerever, provide game metadata for the user to help in determining which of the recommendations to use. These included publication year, weight (difficulty),average rating (based on all reviews), number of all ratings, categories (genres), and mechanics (how the game is played). 
+
+	%@sanni, voitko kirjoittaa tähän NFV:stä?
+
+
+	%@Ahti, voitko kirjoittaa tähän frontista?
+
+	%@Sanni, voitko kirjoittaa tähän UI:stä?
 
 	
 	
@@ -108,7 +115,7 @@
 	\section{Results}\label{results}
 	
 	
-	
+	% Linkki nettisivulle ja selostetaan toiminnallisuudesta jotain, jos joitain jäänyt kertomatta metodeissa. Tämä voi tarvittaessa olla lyhyt
 	
 	
 	
@@ -120,24 +127,33 @@
 	
 	\section{Discussion}\label{discussion}
 
-	We created a board game recommendation webpage based on a sample of 200.000 board game reviews from 1000 active BoarGameGeek.com users to help BoardGameGeek users\textemdash or anyone\textemdash find new boardgames that match their taste.
+	We created a board game recommendation webpage based on a sample of 200.000 board game reviews from 1000 active BoarGameGeek.com users to help BoardGameGeek users\textemdash or anyone\textemdash find new boardgames that match their taste. Below we will reflect on the lessons learned from our project.
 	
 	%%%% Interpretation of results to answer research question
+	We found it interesting how simple it is to create a recommendation algorithm that works fairly well. It is reassuring that one can first build something that works and then make it more complex. That is essentially what we did, and will definitely use a similar routine for future data science projects.
 	
 	%% Surprising results?
 	
 	%%%% Possible weaknesses
+	Setting up API was a valuable learning experience. If we were to redo this, it would probably be better to rely on a ready made data dump. This is because the rate limits were very restrictive and getting the data in tidy format involved quite a bit of work. If this project was expanded, we would use the whole BGG database as a training data to get even better estimates. For the scope of this mini-project, 200,000 reviews should be enough.
+
+	%@Sanni, mitä sinä opit tai mitä pohdintoja nousi tätä tehdessä?
+
+	%@Ahti,mitä sinä opit tai mitä pohdintoja nousi tätä tehdessä?
 	
 	%%%% Broader implications / Comparison or synthesis with results from literature
 	%% how does relate to other research questions?
 	%% does it support current hypotheses in your field?
 	%% how does it relate with literature (wider than topic of this paper)
+	We also learned how using everyone's strengths can contributed into a great product. One of us had solid experience from front end and boardgames; another from creating appealing user interface and keeping repositories organized; yet another from statistics and managing projects more generally. Combining these abilities allowed us to have a clear division of labor among the group and make a steady progress with weakly checkpoints.
 	
 	
 	%%%% Prospects for future research
-	If this project was expanded, we would use the whole BGG database as a training data %, and have an option to rate a curated list to get recommendations even without a BGG user account.
+	%, and have an option to rate a curated list to get recommendations even without a BGG user account.
+	Other than using a larger training data, future work could try out different recommendation algorithms and optimize them with more rigor.
 	
 	% Conclusion for Article
+	This project serves as a good example that when the problem definition is clear cut and the product creates true added value for the user, it is easy to manage a complex workflow like ours. With a clear purpose and goal in mind, it is easier to stay on track and strive for a product that will bring added value to users.
 	
 	%\clearpage
 	%%%--------cd C:\Users\mmak\OneDrive - Väestöliitto ry\FLH-THESIS\1_determinants\1publish_determinantscd C:\Users\mmak\OneDrive - Väestöliitto ry\FLH-THESIS\1_determinants\1publish_determinants---------------------------------------
