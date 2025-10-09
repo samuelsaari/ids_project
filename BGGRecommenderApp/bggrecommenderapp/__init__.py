@@ -1,8 +1,9 @@
 import os
 
-from flask import Flask
+from flask import Flask, request, render_template
 
-from . import main_page
+from . import data_handler as D
+from . import recommending as R
 
 
 def create_app(test_config=None):
@@ -25,11 +26,33 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route("/hello")
-    def hello():
-        return "Hello, World!"
+    data_handler = D.DataHandler()
 
-    app.register_blueprint(main_page.bp)
+    if data_handler.get_rec_mat() is None:
+        # Calc nmf in advance, so that first user doesn't have to wait
+
+        rec_mat = R.generate_recommendation_matrix(data_handler.get_bgg_data())
+        data_handler.set_rec_mat(rec_mat)
+
+    @app.route("/", methods=["GET", "POST"])
+    def main_page():
+        recs = None
+        if request.method == "POST":
+            username: str = request.form["username"]
+
+            if username not in data_handler.get_bgg_data().columns:
+
+                bgg_data = data_handler.fetch_new_user_into_bgg_data(username)
+
+                # Regenerate the recommendation matrix
+                rec_mat = R.generate_recommendation_matrix(bgg_data)
+                data_handler.set_rec_mat(rec_mat)
+
+            rec_mat = data_handler.get_rec_mat()
+            bgg_data = data_handler.get_bgg_data()
+            raw_data = data_handler.get_raw_bgg_data()
+            recs = R.fetch_recommendations(rec_mat, bgg_data, username, raw_data)
+
+        return render_template("main_page.html", recommendations=recs)
 
     return app

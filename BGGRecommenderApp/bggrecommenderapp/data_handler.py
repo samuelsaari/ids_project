@@ -4,25 +4,33 @@ import pandas as p
 from . import data_collector as collector
 from . import util
 
+from pathlib import Path
+
 
 class DataLoadError(Exception):
     pass
+
+
+project_data_path: Path = Path(__file__).parent.parent / "data"
 
 
 class DataHandler:
 
     def __init__(
         self,
-        raw_bgg_data_path: str = "./bgg_data/bgg_ratings_medium.feather",
-        bgg_data_path: str = "./bgg_data/bgg_ratings_formatted.feather",
-        rec_mat_path: str = "./rec_mat/rec_mat.feather",
+        raw_bgg_data_path: Path = project_data_path
+        / "bgg_data/bgg_ratings_medium.feather",
+        bgg_data_path: Path = project_data_path
+        / "bgg_data/bgg_ratings_formatted.feather",
+        rec_mat_path: Path = project_data_path / "rec_mat/rec_mat.feather",
     ) -> None:
 
         try:
             self.raw_bgg_data: p.DataFrame = f.read_feather(raw_bgg_data_path)
 
-            self.bgg_data = util.bgg_to_nmf_ready(raw_bgg_data)
-        except:
+            self.bgg_data = util.bgg_to_nmf_ready(self.raw_bgg_data)
+        except Exception as e:
+            print(e)
             raise DataLoadError("Failed to load raw bgg data")
 
         try:
