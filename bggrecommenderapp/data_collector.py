@@ -668,7 +668,6 @@ class EnhancedBGGCollector:
                         "username": username,
                         "bgg_id": int(game_id),
                         "game_name": game_name,
-                        "game_id": int(game_id),
                         "rating": float(rating_value),
                         "owned": int(owned),
                         "num_plays": num_plays,
@@ -1458,7 +1457,7 @@ if __name__ == "__main__":
     print("=" * 60)
 
     # Run quick test to verify everything works
-    data = collector.run_collection("medium")
+    data = collector.run_collection("full")
 
     if not data.empty:
         print("\n✅ Collector working successfully!")
