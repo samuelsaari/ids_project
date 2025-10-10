@@ -1,14 +1,19 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Main page{% endblock %}</h1>
+  <h1 class="text-center my-4">{% block title %}Main page{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-	<p>Enter your boardgamegeek username, and press fetch recommendations</p>
-	<form method="post">
-		<label for="username">Username</label>
-		<input name="username" id="username" required>
-		<input type="submit" value="Get my recommendations">
-	</form>
+	<div class="text-center">
+		<p>Enter your boardgamegeek username, and press fetch recommendations</p>
+		<form method="post" class="w-50 mx-auto">
+			<div class="my-4">
+				<input name="username" id="username" type="text" class="form-control" placeholder="Username" required>
+			</div>
+			<div class="text-center">
+				<button class="btn btn-primary" type="submit">Get my recommendations</button>
+			</div>
+		</form>
+	</div>
 {% endblock %}

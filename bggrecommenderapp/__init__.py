@@ -51,7 +51,7 @@ def create_app(test_config=None):
 
             return redirect(url_for("recommendations"))
 
-        return render_template("index.html", recommendations=recs)
+        return render_template("index.html")
 
     @app.route("/recommendations", methods=["GET"])
     def recommendations():
@@ -66,5 +66,10 @@ def create_app(test_config=None):
         recs = R.fetch_recommendations(rec_mat, bgg_data, username, raw_data)
 
         return render_template("recs_page.html", recommendations=recs)
+    
+    @app.route("/reset")
+    def reset():
+        session.clear()
+        return redirect(url_for("index"))
 
     return app
