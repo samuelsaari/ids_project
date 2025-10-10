@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Recommendations{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% if recommendations %}
+    <h3> Recommendations for {{ recommendations['username'] }}</h3>
+    <ol>
+	{% for rec in recommendations['recommendations'] %}
+	  <li><a href={{'https://boardgamegeek.com/boardgame/' +  rec.id}}>{{rec.name}}</a></li>
+	{% endfor %}
+    </ol>
+    <form action="{{ url_for('index') }}" method="get">
+      <button type="submit">Back</button>
+    </form>
+  {% endif %}
+{% endblock %}
