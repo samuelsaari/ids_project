@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session, redirect, url_for
 
 from . import data_handler as D
 from . import recommending as R
@@ -35,10 +35,11 @@ def create_app(test_config=None):
         data_handler.set_rec_mat(rec_mat)
 
     @app.route("/", methods=["GET", "POST"])
-    def main_page():
+    def index():
         recs = None
         if request.method == "POST":
             username: str = request.form["username"]
+            session["username"] = username
 
             if username not in data_handler.get_bgg_data().columns:
 
@@ -48,11 +49,22 @@ def create_app(test_config=None):
                 rec_mat = R.generate_recommendation_matrix(bgg_data)
                 data_handler.set_rec_mat(rec_mat)
 
-            rec_mat = data_handler.get_rec_mat()
-            bgg_data = data_handler.get_bgg_data()
-            raw_data = data_handler.get_raw_bgg_data()
-            recs = R.fetch_recommendations(rec_mat, bgg_data, username, raw_data)
+            return redirect(url_for("recommendations"))
 
-        return render_template("main_page.html", recommendations=recs)
+        return render_template("index.html", recommendations=recs)
+
+    @app.route("/recommendations", methods=["GET"])
+    def recommendations():
+        username = session.get("username")
+
+        if username is None:
+            return redirect(url_for("main_page"))
+        
+        rec_mat = data_handler.get_rec_mat()
+        bgg_data = data_handler.get_bgg_data()
+        raw_data = data_handler.get_raw_bgg_data()
+        recs = R.fetch_recommendations(rec_mat, bgg_data, username, raw_data)
+
+        return render_template("recs_page.html", recommendations=recs)
 
     return app
