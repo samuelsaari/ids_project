@@ -14,7 +14,7 @@ def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
     # In a case where user has rated the the same game twice we mean the ratings.
 
     game_user_frame: p.DataFrame = data.pivot_table(
-        index="game_id", columns="username", values="rating", aggfunc="mean"
+        index="bgg_id", columns="username", values="rating", aggfunc="mean"
     )
 
     # Impute NaN's for zeros
@@ -25,7 +25,7 @@ def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
 
 
 def get_game_names_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
-    matched_games = raw_bgg_data[raw_bgg_data["game_id"] == game_id][
+    matched_games = raw_bgg_data[raw_bgg_data["bgg_id"] == game_id][
         "game_name"
     ].unique()
     return matched_games.tolist()
