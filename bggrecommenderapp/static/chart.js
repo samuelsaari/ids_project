@@ -14,6 +14,7 @@ function initChart(recId, recRatings) {
       }]
     },
     options: {
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           display: false
