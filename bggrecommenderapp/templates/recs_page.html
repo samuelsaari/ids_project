@@ -12,7 +12,7 @@
         <thead>
           <tr>
             <th scope="col">Rank</th>
-            <th scope="col">Game</th>
+            <th scope="col" class="game-col">Game</th>
             <th scope="col">Estimated Rating</th>
             <th scope="col" class="ratings-col">Rating Distribution</th>
           </tr>
@@ -22,7 +22,8 @@
             <tr>
               <td>{{ loop.index }}</td>
               <td>
-                <a href="{{ 'https://boardgamegeek.com/boardgame/' + rec.id }}">{{ rec.name }}</a>
+                <a href="{{ 'https://boardgamegeek.com/boardgame/' + rec.id }}">{{ rec.name }}</a><br>
+                <small>Categories: {{ rec.categories | join(', ') }}</small>
               </td>
               <td></td>
               <td>
