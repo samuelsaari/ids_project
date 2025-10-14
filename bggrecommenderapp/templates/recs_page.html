@@ -11,7 +11,10 @@
 			<div class="w-50 mx-auto text-start">
         <ol>
           {% for rec in recommendations['recommendations'] %}
-            <li><a href={{'https://boardgamegeek.com/boardgame/' +  rec.id}}>{{rec.name}}</a></li>
+            <li>
+              <a href={{'https://boardgamegeek.com/boardgame/' +  rec.id}}>{{rec.name}}</a>
+              <canvas id="{{ rec.id }}"></canvas>  
+            </li>
           {% endfor %}
         </ol>
       </div>
@@ -20,4 +23,14 @@
       </form>
     </div>
   {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='chart.js') }}"></script>
+  <script>
+    const recJson = {{ recommendations['recommendations'] | tojson }};
+    recJson.forEach(rec => {
+      initChart(rec.id, rec.ratings);
+    });
+  </script>
 {% endblock %}
