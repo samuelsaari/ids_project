@@ -22,7 +22,7 @@
             <tr>
               <td class="rank-text">{{ loop.index }}.</td>
               <td>
-                <a href="{{ 'https://boardgamegeek.com/boardgame/' + rec.id }}" class="game-link">{{ rec.name }}</a><br>
+                <a href="{{ 'https://boardgamegeek.com/boardgame/' + rec.id }}" target="_blank" class="game-link">{{ rec.name }}</a><br>
                 <small>Categories: {{ rec.categories | join(', ') }}</small>
               </td>
               <td></td>
