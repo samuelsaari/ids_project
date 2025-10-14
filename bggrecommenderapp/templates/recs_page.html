@@ -13,8 +13,8 @@
           <tr>
             <th scope="col">Rank</th>
             <th scope="col">Game</th>
-            <th scope="col">Match Score</th>
-            <th scope="col" class="ratings-col">Ratings</th>
+            <th scope="col">Estimated Rating</th>
+            <th scope="col" class="ratings-col">Rating Distribution</th>
           </tr>
         </thead>
         <tbody>
@@ -44,7 +44,7 @@
   <script>
     const recJson = {{ recommendations['recommendations'] | tojson }};
     recJson.forEach(rec => {
-      initChart(rec.id, rec.ratings);
+      initChart(rec.id, rec.rating_distribution);
     });
   </script>
 {% endblock %}
