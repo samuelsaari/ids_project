@@ -27,3 +27,10 @@ def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
 def get_game_names_by_id(bgg_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
     matched_games = raw_bgg_data[raw_bgg_data["bgg_id"] == bgg_id]["bgg_id"].unique()
     return matched_games.tolist()
+
+def get_rating_distribution_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
+    game_ratings = raw_bgg_data[raw_bgg_data['bgg_id'] == game_id]['rating'].round().astype(int)
+
+    ratings_distribution = game_ratings.value_counts().reindex(range(1, 11), fill_value=0).sort_index().to_dict()
+    
+    return ratings_distribution

@@ -65,13 +65,7 @@ def create_app(test_config=None):
         raw_data = data_handler.get_raw_bgg_data()
         recs = R.fetch_recommendations(rec_mat, bgg_data, username, raw_data)
 
-        dummy_recs = {'username': 'AlexCast', 'recommendations': [
-            {'id': '174430', 'name': 'Gloomhaven', 'ratings': {'1': 0, '2': 0, '3': 0, '4': 1, '5': 5, '6': 13, '7': 27, '8': 44, '9': 73, '10': 60}},
-            {'id': '124361', 'name': 'Concordia', 'ratings': {'1': 0, '2': 0, '3': 0, '4': 1, '5': 5, '6': 15, '7': 37, '8': 54, '9': 74, '10': 100}},
-            {'id': '161936', 'name': 'Pandemic Legacy: Season 1', 'ratings': {'1': 10, '2': 2, '3': 12, '4': 14, '5': 56, '6': 143, '7': 245, '8': 4, '9': 733, '10': 660}}
-        ]}
-
-        return render_template("recs_page.html", recommendations=dummy_recs)
+        return render_template("recs_page.html", recommendations=recs)
     
     @app.route("/reset")
     def reset():
