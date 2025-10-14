@@ -11,6 +11,7 @@ function initChart(recId, recRatings) {
       labels: labels,
       datasets: [{
         data: values,
+        backgroundColor: 'rgba(12, 112, 95, 0.7)',
       }]
     },
     options: {
