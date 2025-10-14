@@ -1,6 +1,5 @@
 import pandas as p
 
-
 def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
     """Format and wrangle data given by EnchancedBGGCollector to be NMF processing ready.
 
@@ -27,6 +26,10 @@ def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
 def get_game_names_by_id(bgg_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
     matched_games = raw_bgg_data[raw_bgg_data["bgg_id"] == bgg_id]["bgg_id"].unique()
     return matched_games.tolist()
+
+def get_game_categories_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
+    game_categories = raw_bgg_data[raw_bgg_data["bgg_id"] == game_id]["categories"].values[0]
+    return game_categories.tolist()
 
 def get_rating_distribution_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
     game_ratings = raw_bgg_data[raw_bgg_data['bgg_id'] == game_id]['rating'].round().astype(int)

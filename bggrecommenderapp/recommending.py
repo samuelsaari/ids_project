@@ -79,9 +79,12 @@ def fetch_recommendations(
     recs: list[dict[str, str]] = []
     for game in user_col.index:
         if bgg_data[bgg_username].loc[game] == 0:
-            recs.append(
-                {"id": str(game), "name": U.get_game_names_by_id(game, raw_bgg_data)[0], "rating_distribution": U.get_rating_distribution_by_id(game, raw_bgg_data)}
-            )
+            recs.append({
+                "id": str(game),
+                "name": U.get_game_names_by_id(game, raw_bgg_data)[0],
+                "rating_distribution": U.get_rating_distribution_by_id(game, raw_bgg_data),
+                "categories": U.get_game_categories_by_id(game, raw_bgg_data)
+            })
 
         if len(recs) == 20:
             break
