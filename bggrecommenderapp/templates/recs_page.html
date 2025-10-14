@@ -8,16 +8,30 @@
   {% if recommendations %}
     <div class="text-center">
       <p> Recommendations for {{ recommendations['username'] }}</p>
-			<div class="w-50 mx-auto text-start">
-        <ol>
+      <table class="table table-striped w-80 mx-auto text-start">
+        <thead>
+          <tr>
+            <th scope="col">Rank</th>
+            <th scope="col">Game</th>
+            <th scope="col">Match Score</th>
+            <th scope="col" class="ratings-col">Ratings</th>
+          </tr>
+        </thead>
+        <tbody>
           {% for rec in recommendations['recommendations'] %}
-            <li>
-              <a href={{'https://boardgamegeek.com/boardgame/' +  rec.id}}>{{rec.name}}</a>
-              <canvas id="{{ rec.id }}"></canvas>  
-            </li>
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>
+                <a href="{{ 'https://boardgamegeek.com/boardgame/' + rec.id }}">{{ rec.name }}</a>
+              </td>
+              <td></td>
+              <td>
+                <canvas id="{{ rec.id }}"></canvas>  
+              </td>
+            </tr>
           {% endfor %}
-        </ol>
-      </div>
+        </tbody>
+      </table>
       <form action="{{ url_for('reset') }}" method="get">
         <button type="submit" class="btn btn-primary">Reset</button>
       </form>
