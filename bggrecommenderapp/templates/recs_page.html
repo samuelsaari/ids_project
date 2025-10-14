@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1 class="text-center my-4">{% block title %}Recommendations page{% endblock %}</h1>
+  <h1 class="text-center my-4">{% block title %}Recommendations{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
   {% if recommendations %}
     <div class="text-center">
-      <p> Recommendations for {{ recommendations['username'] }}</p>
+      <p> For {{ recommendations['username'] }}</p>
       <table class="table table-striped w-80 mx-auto text-start">
         <thead>
           <tr>
-            <th scope="col">Rank</th>
-            <th scope="col" class="game-col">Game</th>
+            <th scope="col" class="rank-col">Rank</th>
+            <th scope="col" class="game-col">Game details</th>
             <th scope="col">Estimated Rating</th>
             <th scope="col" class="ratings-col">Rating Distribution</th>
           </tr>
@@ -20,9 +20,9 @@
         <tbody>
           {% for rec in recommendations['recommendations'] %}
             <tr>
-              <td>{{ loop.index }}</td>
+              <td class="rank-text">{{ loop.index }}.</td>
               <td>
-                <a href="{{ 'https://boardgamegeek.com/boardgame/' + rec.id }}">{{ rec.name }}</a><br>
+                <a href="{{ 'https://boardgamegeek.com/boardgame/' + rec.id }}" class="game-link">{{ rec.name }}</a><br>
                 <small>Categories: {{ rec.categories | join(', ') }}</small>
               </td>
               <td></td>
@@ -34,7 +34,7 @@
         </tbody>
       </table>
       <form action="{{ url_for('reset') }}" method="get">
-        <button type="submit" class="btn btn-primary">Reset</button>
+        <button type="submit" class="btn btn-primary">Return</button>
       </form>
     </div>
   {% endif %}
