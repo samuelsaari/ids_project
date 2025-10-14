@@ -9,6 +9,12 @@
   border-color: #0c705f !important;
 }
 
+.form-control:focus {
+  border-color: rgb(10, 131, 111, 0.5);
+  box-shadow: 0 0 5px rgba(12, 145, 123, 0.3) !important;
+
+}
+
 .rank-col {
   width: 55px;
 }
