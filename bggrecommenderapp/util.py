@@ -1,4 +1,6 @@
 import pandas as p
+import numpy as np
+
 
 def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
     """Format and wrangle data given by EnchancedBGGCollector to be NMF processing ready.
@@ -23,17 +25,32 @@ def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
     return game_user_frame
 
 
-def get_game_names_by_id(bgg_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
-    matched_games = raw_bgg_data[raw_bgg_data["bgg_id"] == bgg_id]["bgg_id"].unique()
+def get_game_names_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
+    matched_games = raw_bgg_data[raw_bgg_data["bgg_id"] == game_id][
+        "game_name"
+    ].unique()
     return matched_games.tolist()
 
+
 def get_game_categories_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
-    game_categories = raw_bgg_data[raw_bgg_data["bgg_id"] == game_id]["categories"].values[0]
-    return game_categories.tolist()
+    game_categories = raw_bgg_data[raw_bgg_data["bgg_id"] == game_id][
+        "categories"
+    ].values[0]
+    # In case some games have no categories
+    game_categories = game_categories.tolist() if game_categories is not None else []
+    return game_categories
+
 
 def get_rating_distribution_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
-    game_ratings = raw_bgg_data[raw_bgg_data['bgg_id'] == game_id]['rating'].round().astype(int)
+    game_ratings = (
+        raw_bgg_data[raw_bgg_data["bgg_id"] == game_id]["rating"].round().astype(int)
+    )
 
-    ratings_distribution = game_ratings.value_counts().reindex(range(1, 11), fill_value=0).sort_index().to_dict()
-    
+    ratings_distribution = (
+        game_ratings.value_counts()
+        .reindex(range(1, 11), fill_value=0)
+        .sort_index()
+        .to_dict()
+    )
+
     return ratings_distribution
