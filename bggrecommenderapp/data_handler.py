@@ -38,7 +38,7 @@ class DataHandler:
         try:
             self.bgg_data: p.DataFrame = f.read_feather(bgg_data_path)
         except:
-            self.set_bgg_data(self.raw_bgg_data)
+            self.set_bgg_data(util.bgg_to_nmf_ready(self.raw_bgg_data))
             pass
 
         try:
