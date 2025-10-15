@@ -1,5 +1,6 @@
 import pandas as p
-import numpy as np
+
+from fancyimpute import SoftImpute
 
 
 def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
@@ -18,9 +19,17 @@ def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
         index="bgg_id", columns="username", values="rating", aggfunc="mean"
     )
 
-    # Impute NaN's for zeros
+    # Impute NaN's with SoftImpute to avoid bias
 
-    game_user_frame = game_user_frame.fillna(0)
+    imputed = SoftImpute(
+        max_rank=50, min_value=0, max_value=10, max_iters=100
+    ).fit_transform(game_user_frame)
+
+    # Convert imputed back to dataframe
+
+    game_user_frame = p.DataFrame(
+        imputed, index=game_user_frame.index, columns=game_user_frame.columns
+    )
 
     return game_user_frame
 

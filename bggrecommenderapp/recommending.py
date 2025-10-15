@@ -2,12 +2,12 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error
 from sklearn.decomposition import NMF
+from typing import Any
 
 from . import util as U
 
 
-# Calculated for medium sized scrape
-OPTIMAL_RANK: int = 200
+OPTIMAL_RANK: int = 100
 
 
 # Optimal rank calculation algorithm, graciously provided by:
@@ -17,14 +17,14 @@ def rank_calculation(data: pd.DataFrame):
     Calculate the optimal rank of the specified dataframe.
     """
     # Calculate benchmark value
-    benchmark = np.linalg.norm(data, ord="fro") * 0.0001
+    benchmark = np.linalg.norm(data, ord="fro") * 0.000001
 
     # Iterate through various values of rank to find optimal
-    rank = 150
+    rank = 1
     while True:
 
         # initialize the model
-        model = NMF(n_components=rank, init="random", random_state=0, max_iter=500)
+        model = NMF(n_components=rank, init="random", max_iter=500)
         W = model.fit_transform(data)
         H = model.components_
         V = W @ H
@@ -37,7 +37,7 @@ def rank_calculation(data: pd.DataFrame):
         )
 
         if RMSE < benchmark:
-            return rank, V
+            return rank
 
         # Increment rank if RMSE isn't smaller than the benchmark
         rank += 10
@@ -55,6 +55,9 @@ def generate_recommendation_matrix(
     Returns:
         pd.DataFrame: recommendation matrix, which is the same dimensions as data, but all cells have been populated by the NMF model
     """
+
+    rank = OPTIMAL_RANK  # rank_calculation(data)
+
     model = NMF(n_components=rank)
     model.fit(data)
 
@@ -71,20 +74,31 @@ def fetch_recommendations(
     bgg_data: pd.DataFrame,
     bgg_username: str,
     raw_bgg_data: pd.DataFrame,
-) -> dict[str, str | list[dict[str, str]]]:
+) -> dict[str, str | list[dict[str, Any]]]:
 
-    # Get top 20 games the user has not reviewed
+    # Sort the ratings
     user_col = recommendation_matrix[bgg_username].sort_values(ascending=False)
 
-    recs: list[dict[str, str]] = []
+    # So that we can see what the user has rated
+    unimputed_data = raw_bgg_data.pivot_table(
+        index="bgg_id", columns="username", values="rating", aggfunc="mean"
+    ).fillna(-1)
+
+    # Get top 20 recommendations
+    recs: list[dict[str, Any]] = []
     for game in user_col.index:
-        if bgg_data[bgg_username].loc[game] == 0:
-            recs.append({
-                "id": str(game),
-                "name": U.get_game_names_by_id(game, raw_bgg_data)[0],
-                "rating_distribution": U.get_rating_distribution_by_id(game, raw_bgg_data),
-                "categories": U.get_game_categories_by_id(game, raw_bgg_data)
-            })
+        if unimputed_data[bgg_username].loc[game] == -1:
+            recs.append(
+                {
+                    "id": str(game),
+                    "estimated_rating": f"{user_col[game]:.2f}",
+                    "name": U.get_game_names_by_id(game, raw_bgg_data)[0],
+                    "rating_distribution": U.get_rating_distribution_by_id(
+                        game, raw_bgg_data
+                    ),
+                    "categories": U.get_game_categories_by_id(game, raw_bgg_data),
+                }
+            )
 
         if len(recs) == 20:
             break

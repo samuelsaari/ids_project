@@ -25,7 +25,7 @@
                 <a href="{{ 'https://boardgamegeek.com/boardgame/' + rec.id }}" target="_blank" class="game-link">{{ rec.name }}</a><br>
                 <small>Categories: {{ rec.categories | join(', ') }}</small>
               </td>
-              <td></td>
+              <td>{{rec.estimated_rating}}</td>
               <td>
                 <canvas id="{{ rec.id }}"></canvas>  
               </td>
