@@ -98,15 +98,15 @@
 	
 	\section{Methods}\label{methods}
 
-	Using review scores is the single best way of generating recommendations \autocite{epsteinRangeWhyGeneralists2021}. It seems counterintutive as one would think that categories, genres, sales or other available metadata would be equally helpful. Based on this empirical finding and the scope of the project, we chose to focus solely on the review scores. Upon fetching the recommendations, we did, howerever, provide game metadata for the user to help in determining which of the recommendations to use. These included publication year, weight (difficulty),average rating (based on all reviews), number of all ratings, categories (genres), and mechanics (how the game is played). 
+	Using review scores is the single best way of generating recommendations \autocite{epsteinRangeWhyGeneralists2021}. It seems counterintutive as one would think that categories, genres, sales or other available metadata would be equally helpful. Based on this empirical finding and the scope of the project, we chose to focus solely on the review scores. Upon fetching the recommendations, we did, howerever, provide game metadata for the user to help in determining which of the recommendations to use. These included publication year, weight (difficulty), average rating (based on all reviews), number of all ratings, categories (genres), and mechanics (how the game is played). 
 
-	%@sanni, voitko kirjoittaa tähän NFV:stä?
-
+	The method we chose to use for data analysis was non-negative matrix factorization (NMF), which is an unsupervised learning algorithm. (miksi valittiin?). 
+	
+	We combined the usernames and game names into a matrix with the corresponding ratings from each user and imputed NaN's with SoftImpute. For the NMF model we also had to calculate the optimal rank, which we did by iteratively running multiple NMF models (Selitetään miten meidän defaulttiin päädyttiin.). With the calculated default optimal rank we then ran the NMF model with sklearn's implementation and the resulting recommendation matrix giving us estimates on how the user may rate games they haven't rated yet. We used these estimations to show the user the top games they haven't rated yet as well as the actual estimated rating they might give them.
 
 	%@Ahti, voitko kirjoittaa tähän frontista?
-
-	%@Sanni, voitko kirjoittaa tähän UI:stä?
-
+	
+	Regarding the UI we kept it very simple with a Boostrap table to show the details for each game and a Chart.js bar table to show the rating distribution within our dataset. Otherwise no other visualization methods were used in our project.
 	
 	
 	%%%%-----------------------------------------------
@@ -118,7 +118,7 @@
 	% Linkki nettisivulle ja selostetaan toiminnallisuudesta jotain, jos joitain jäänyt kertomatta metodeissa. Tämä voi tarvittaessa olla lyhyt
 	
 	%kuinka hyvin nmf toimi, virhe
-	%@sanni
+	%@Ahti
 	
 	
 	
@@ -139,6 +139,10 @@
 	Setting up API was a valuable learning experience. If we were to redo this, it would probably be better to rely on a ready made data dump. This is because the rate limits were very restrictive and getting the data in tidy format involved quite a bit of work. If this project was expanded, we would use the whole BGG database as a training data to get even better estimates. For the scope of this mini-project, 200,000 reviews should be enough.
 
 	%@Sanni, mitä sinä opit tai mitä pohdintoja nousi tätä tehdessä?
+	
+	% Pitää ehkä vähän restructure, mutta lisään nyt tähän kohtaan podintoja anyway. (Myös on vastaan toista pohdintaa myöhemmin)
+	
+	Generally the project ended up being less complex than we had wished, though we didn't exactly depart from our initial plan. The final state of the project quite close to the minimum viable product we were expecting to get. Mainly we weren't able to implement the ideas we for non-users being able to also get recommendations. Other ideas we had included more visualization as well as using the categories in some meaningful way. Ultimately this was mainly due to scheduling problems as well as partly due to setting such a clear division for work tasks. Perhaps if we had found time to work as a team rather than waiting on each person to finish their indivitual tasks, we could've progressed more steadily and had time for other additions.
 
 	%@Ahti,mitä sinä opit tai mitä pohdintoja nousi tätä tehdessä?
 	
@@ -146,7 +150,7 @@
 	%% how does relate to other research questions?
 	%% does it support current hypotheses in your field?
 	%% how does it relate with literature (wider than topic of this paper)
-	We also learned how using everyone's strengths can contributed into a great product. One of us had solid experience from front end and boardgames; another from creating appealing user interface and keeping repositories organized; yet another from statistics and managing projects more generally. Combining these abilities allowed us to have a clear division of labor among the group and make a steady progress with weakly checkpoints.
+	We also learned how using everyone's strengths can contributed into a great product. One of us had solid experience from front end and boardgames; another from creating appealing user interface and keeping repositories organized; yet another from statistics and managing projects more generally. Combining these abilities allowed us to have a clear division of labor among the group and make a steady progress with weekly checkpoints.
 	
 	
 	%%%% Prospects for future research
