@@ -63,3 +63,7 @@ def get_rating_distribution_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> li
     )
 
     return ratings_distribution
+
+
+def get_usernames(recommendations_matrix: p.DataFrame) -> list[str]:
+    return list(recommendations_matrix.columns.values)
