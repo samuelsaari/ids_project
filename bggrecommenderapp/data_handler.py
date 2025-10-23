@@ -34,7 +34,7 @@ class DataHandler:
             print(e)
             raise DataLoadError("Failed to load raw bgg data")
 
-        self.bgg_data_path: str = bgg_data_path
+        self.bgg_data_path: Path = bgg_data_path
         try:
             self.bgg_data: p.DataFrame = f.read_feather(bgg_data_path)
         except:
@@ -45,7 +45,7 @@ class DataHandler:
             self.rec_mat_cache: p.DataFrame | None = f.read_feather(rec_mat_path)
         except:
             self.rec_mat_cache = None
-        self.rec_mat_path: str = rec_mat_path
+        self.rec_mat_path: Path = rec_mat_path
 
         self.bgg_collector = collector.EnhancedBGGCollector()
 

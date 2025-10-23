@@ -1,9 +1,10 @@
 import os
 
-from flask import Flask, request, render_template, session, redirect, url_for
+from flask import Flask, request, render_template, session, redirect, url_for, jsonify
 
 from . import data_handler as D
 from . import recommending as R
+from . import util as U
 
 
 def create_app(test_config=None):
@@ -53,20 +54,24 @@ def create_app(test_config=None):
 
         return render_template("index.html")
 
+    @app.route("/usernames")
+    def usernames():
+        return jsonify(U.get_usernames(data_handler.get_rec_mat()))
+
     @app.route("/recommendations", methods=["GET"])
     def recommendations():
         username = session.get("username")
 
         if username is None:
             return redirect(url_for("main_page"))
-        
+
         rec_mat = data_handler.get_rec_mat()
         bgg_data = data_handler.get_bgg_data()
         raw_data = data_handler.get_raw_bgg_data()
         recs = R.fetch_recommendations(rec_mat, bgg_data, username, raw_data)
 
         return render_template("recs_page.html", recommendations=recs)
-    
+
     @app.route("/reset")
     def reset():
         session.clear()
