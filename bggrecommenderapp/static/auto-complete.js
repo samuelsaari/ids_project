@@ -8,7 +8,8 @@ fetch('/usernames')
   .then(data => usernames = data);
 
 input.addEventListener('input', function() {
-  const query = this.value.toLowerCase();
+  const query = this.value
+  const lowercase_query = query.toLowerCase();
   dropdown.innerHTML = '';
 
   if (!query) {
@@ -18,12 +19,19 @@ input.addEventListener('input', function() {
   }
 
   const filtered = usernames
-    .filter(u => u.toLowerCase().startsWith(query))
+    .filter(u => u.toLowerCase().startsWith(lowercase_query))
     .slice(0, 10);
+
+    console.log(query)
+    console.log(usernames.includes(query))
+  if (usernames.includes(query)) {
+    alertBox.style.display = 'none';
+  } else {
+    alertBox.style.display = 'block';
+  }
 
   if (filtered.length === 0) {
     dropdown.style.display = 'none';
-    alertBox.style.display = 'block';
     return;
   }
 
@@ -36,6 +44,7 @@ input.addEventListener('input', function() {
     option.onclick = () => {
       input.value = name;
       dropdown.style.display = 'none';
+      alertBox.style.display = 'none';
     };
     dropdown.appendChild(option);
   });
