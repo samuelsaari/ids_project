@@ -1,4 +1,4 @@
-files: ^bggrecommmenderapp/
+exclude: ^(documentation/|static/|data_shared_via_git/|notebooks/|static/|data_shared_via_git/|notebooks/)
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
