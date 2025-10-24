@@ -100,7 +100,7 @@
 
 	Using review scores is the single best way of generating recommendations \autocite{epsteinRangeWhyGeneralists2021}. It seems counterintutive as one would think that categories, genres, sales or other available metadata would be equally helpful. Based on this empirical finding and the scope of the project, we chose to focus solely on the review scores. Upon fetching the recommendations, we did, howerever, provide game metadata for the user to help in determining which of the recommendations to use. These included publication year, weight (difficulty), average rating (based on all reviews), number of all ratings, categories (genres), and mechanics (how the game is played). 
 
-	The method we chose to use for data analysis was non-negative matrix factorization (NMF), which is an unsupervised learning algorithm. (miksi valittiin?). 
+	The method we chose to use for data analysis was non-negative matrix factorization (NMF), which is an unsupervised learning algorithm \autocite{dalyStepbyStepNMFExample2023}. (miksi valittiin?). 
 	
 	We combined the usernames and game names into a matrix with the corresponding ratings from each user and imputed NaN's with SoftImpute. For the NMF model we also had to calculate the optimal rank, which we did by iteratively running multiple NMF models (Selitetään miten meidän defaulttiin päädyttiin.). With the calculated default optimal rank we then ran the NMF model with sklearn's implementation and the resulting recommendation matrix giving us estimates on how the user may rate games they haven't rated yet. We used these estimations to show the user the top games they haven't rated yet as well as the actual estimated rating they might give them.
 
