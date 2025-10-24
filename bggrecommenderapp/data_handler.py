@@ -19,32 +19,33 @@ class DataHandler:
     def __init__(
         self,
         raw_bgg_data_path: Path = project_data_path
-        / "bgg_data/bgg_ratings_medium.feather",
+        / "bgg_data/bgg_ratings_full.feather",
         bgg_data_path: Path = project_data_path
-        / "bgg_data/bgg_ratings_formatted.feather",
-        rec_mat_path: Path = project_data_path / "rec_mat/rec_mat.feather",
+        / "bgg_data/bgg_ratings_full_formatted.feather",
+        rec_mat_path: Path = project_data_path / "rec_mat/rec_mat_full.feather",
     ) -> None:
+
+        self.raw_bgg_data_path = raw_bgg_data_path
 
         try:
             self.raw_bgg_data: p.DataFrame = f.read_feather(raw_bgg_data_path)
 
-            self.bgg_data = util.bgg_to_nmf_ready(self.raw_bgg_data)
         except Exception as e:
             print(e)
             raise DataLoadError("Failed to load raw bgg data")
 
+        self.bgg_data_path: Path = bgg_data_path
         try:
             self.bgg_data: p.DataFrame = f.read_feather(bgg_data_path)
         except:
+            self.set_bgg_data(util.bgg_to_nmf_ready(self.raw_bgg_data))
             pass
-
-        self.bgg_data_path: str = bgg_data_path
 
         try:
             self.rec_mat_cache: p.DataFrame | None = f.read_feather(rec_mat_path)
         except:
             self.rec_mat_cache = None
-        self.rec_mat_path: str = rec_mat_path
+        self.rec_mat_path: Path = rec_mat_path
 
         self.bgg_collector = collector.EnhancedBGGCollector()
 
@@ -55,14 +56,27 @@ class DataHandler:
         self.rec_mat_cache = new_rec_mat
         f.write_feather(self.rec_mat_cache, self.rec_mat_path)
 
+    def set_raw(self, new_raw: p.DataFrame) -> None:
+        self.raw_bgg_data = new_raw
+        f.write_feather(self.raw_bgg_data, self.raw_bgg_data_path)
+
     def fetch_new_user_into_bgg_data(self, username: str) -> p.DataFrame:
+
+        # Fetch user data
         collected_user: p.DataFrame = self.bgg_collector.collect_users(
             [username], min_ratings=1
         )
-        formatted_user_data: p.DataFrame = util.bgg_to_nmf_ready(collected_user)
-        self.set_bgg_data(
-            self.bgg_data.join(formatted_user_data, how="outer").fillna(0)
-        )
+
+        # Enrich with game metadata
+
+        enriched = self.bgg_collector.enrich_with_game_metadata(collected_user)
+
+        # Add new rows to raw_data
+        self.set_raw(p.concat([self.raw_bgg_data, enriched]))
+
+        # Redo imputing etc
+        self.set_bgg_data(util.bgg_to_nmf_ready(self.raw_bgg_data))
+
         return self.bgg_data
 
     def get_bgg_data(self) -> p.DataFrame:

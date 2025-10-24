@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="text-center my-4">{% block title %}Loading...{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+  <div class="loading-container">
+    <div class="spinner-border text-warning mb-3" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-muted">We are crunching your recommendations, please wait...</p>
+  </div>
+
+  <script>
+    async function checkStatus() {
+      const res = await fetch("/check_status/{{ job_id }}");
+      const data = await res.json();
+      if (data.done) {
+        window.location.href = "/recommendations";
+      } else {
+        setTimeout(checkStatus, 1000);
+      }
+    }
+    checkStatus();
+  </script>
+
+{% endblock %}

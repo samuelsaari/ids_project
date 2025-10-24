@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="text-center my-4">{% block title %}Recommendations{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% if recommendations %}
+    <div class="text-center">
+      <p> For {{ recommendations['username'] }}</p>
+      <table class="table table-striped w-80 mx-auto text-start">
+        <thead>
+          <tr>
+            <th scope="col" class="rank-col">Rank</th>
+            <th scope="col" class="game-col">Game details</th>
+            <th scope="col">Estimated Rating</th>
+            <th scope="col" class="ratings-col">Rating Distribution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rec in recommendations['recommendations'] %}
+            <tr>
+              <td class="rank-text">{{ loop.index }}.</td>
+              <td>
+                <a href="{{ 'https://boardgamegeek.com/boardgame/' + rec.id }}" target="_blank" class="game-link">{{ rec.name }}</a><br>
+                <small>Categories: {{ rec.categories | join(', ') }}</small>
+              </td>
+              <td>{{rec.estimated_rating}}</td>
+              <td>
+                <canvas id="{{ rec.id }}"></canvas>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <form action="{{ url_for('reset') }}" method="get">
+        <button type="submit" class="btn btn-primary">Return</button>
+      </form>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='chart.js') }}"></script>
+  <script>
+    const recJson = {{ recommendations['recommendations'] | tojson }};
+    recJson.forEach(rec => {
+      initChart(rec.id, rec.rating_distribution);
+    });
+  </script>
+{% endblock %}

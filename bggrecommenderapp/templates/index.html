@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="text-center my-4">{% block title %}BGG Recommender{% endblock %}</h1>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='auto-complete.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+	<div class="text-center">
+		<p>Enter your boardgamegeek username, and press fetch recommendations</p>
+		<form method="post" class="w-50 mx-auto">
+            <div class="autocomplete-container">
+                <input name="username" type="text" id="username-input" placeholder="Search username..." class="form-control" required>
+                <div class="list-group posigtion-absolute w-100 shadow-sm" id="dropdown" style="z-index: 1000; display: none; max-height: 250px; overflow-y: auto"></div>
+            </div>
+			<div class="text-center">
+				<button class="btn btn-primary" type="submit">Get my recommendations</button>
+			</div>
+        <div class="alert alert-warning py-2 px-3 small" id="no-match-alert" style="display: none;">
+            We have no matches for the username you've written. If you proceed, we will fetch the user data from BGG.
+            Recalculating the recommendations will take a fair bit of time, and you must have rated at least one boardgame on BGG!
+        </div>
+		</form>
+	</div>
+{% endblock %}

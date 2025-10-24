@@ -1,5 +1,7 @@
 import pandas as p
 
+from fancyimpute import SoftImpute
+
 
 def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
     """Format and wrangle data given by EnchancedBGGCollector to be NMF processing ready.
@@ -17,13 +19,51 @@ def bgg_to_nmf_ready(data: p.DataFrame) -> p.DataFrame:
         index="bgg_id", columns="username", values="rating", aggfunc="mean"
     )
 
-    # Impute NaN's for zeros
+    # Impute NaN's with SoftImpute to avoid bias
 
-    game_user_frame = game_user_frame.fillna(0)
+    imputed = SoftImpute(
+        max_rank=50, min_value=0, max_value=10, max_iters=100
+    ).fit_transform(game_user_frame)
+
+    # Convert imputed back to dataframe
+
+    game_user_frame = p.DataFrame(
+        imputed, index=game_user_frame.index, columns=game_user_frame.columns
+    )
 
     return game_user_frame
 
 
-def get_game_names_by_id(bgg_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
-    matched_games = raw_bgg_data[raw_bgg_data["bgg_id"] == bgg_id]["bgg_id"].unique()
+def get_game_names_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
+    matched_games = raw_bgg_data[raw_bgg_data["bgg_id"] == game_id][
+        "game_name"
+    ].unique()
     return matched_games.tolist()
+
+
+def get_game_categories_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
+    game_categories = raw_bgg_data[raw_bgg_data["bgg_id"] == game_id][
+        "categories"
+    ].values[0]
+    # In case some games have no categories
+    game_categories = game_categories.tolist() if game_categories is not None else []
+    return game_categories
+
+
+def get_rating_distribution_by_id(game_id: int, raw_bgg_data: p.DataFrame) -> list[str]:
+    game_ratings = (
+        raw_bgg_data[raw_bgg_data["bgg_id"] == game_id]["rating"].round().astype(int)
+    )
+
+    ratings_distribution = (
+        game_ratings.value_counts()
+        .reindex(range(1, 11), fill_value=0)
+        .sort_index()
+        .to_dict()
+    )
+
+    return ratings_distribution
+
+
+def get_usernames(recommendations_matrix: p.DataFrame) -> list[str]:
+    return list(recommendations_matrix.columns.values)

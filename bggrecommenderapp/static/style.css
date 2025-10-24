@@ -1,0 +1,50 @@
+.btn-primary {
+  background-color: #0c917b;
+  border-color: #0a836f;
+  color: white;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: #0c806c !important;
+  border-color: #0c705f !important;
+}
+
+.form-control:focus {
+  border-color: rgb(10, 131, 111, 0.5);
+  box-shadow: 0 0 5px rgba(12, 145, 123, 0.3) !important;
+
+}
+
+.rank-col {
+  width: 55px;
+}
+
+.rank-text {
+  font-size: 1.2em;
+}
+
+.game-col{
+  width: 50%;
+}
+
+.ratings-col {
+  width: 30%;
+}
+
+.game-link {
+  text-decoration: none;
+  color: inherit;
+  font-size: 1.2em;
+}
+
+.game-link:hover {
+  text-decoration: underline;
+}
+
+.loading-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

@@ -93,19 +93,26 @@
 
 	Second, since the game metadata fetching was unreliable even with the exponential backoff time, we used a game metadata cachefile to make sure that if a game metadata had been fetched successfully once, it was stored  on the project home directory.
 
-	Finally, we included only users with at least 25 reviews and fetched the most popular games first to avoid training data matrix sparsity.
+	Finally, we included only users with at least 25 reviews and fetched the most popular games first to avoid training data matrix sparsity. Our final dataset of users was quite small, since user discovery is a nontrivial problem.
 	
 	
 	\section{Methods}\label{methods}
 
-	Using review scores is the single best way of generating recommendations \autocite{epsteinRangeWhyGeneralists2021}. It seems counterintutive as one would think that categories, genres, sales or other available metadata would be equally helpful. Based on this empirical finding and the scope of the project, we chose to focus solely on the review scores. Upon fetching the recommendations, we did, howerever, provide game metadata for the user to help in determining which of the recommendations to use. These included publication year, weight (difficulty), average rating (based on all reviews), number of all ratings, categories (genres), and mechanics (how the game is played). 
+	Using review scores is the single best way of generating recommendations \autocite{epsteinRangeWhyGeneralists2021}. It seems counterintutive as one would think that categories, genres, sales or other available metadata would be equally helpful. Based on this empirical finding and the scope of the project, we chose to focus solely on the review scores.
 
-	The method we chose to use for data analysis was non-negative matrix factorization (NMF), which is an unsupervised learning algorithm \autocite{dalyStepbyStepNMFExample2023}. (miksi valittiin?). 
-	
+	The method we chose to use for data analysis was non-negative matrix factorization (NMF), which is an unsupervised learning algorithm \autocite{dalyStepbyStepNMFExample2023}. We chose NMF as the basis of our recommender system
+    because it is a well known method for such use. % LÄHDE DOI: 10.1109/TAI.2025.3559053
+
 	We combined the usernames and game names into a matrix with the corresponding ratings from each user and imputed NaN's with SoftImpute. For the NMF model we also had to calculate the optimal rank, which we did by iteratively running multiple NMF models (Selitetään miten meidän defaulttiin päädyttiin.). With the calculated default optimal rank we then ran the NMF model with sklearn's implementation and the resulting recommendation matrix giving us estimates on how the user may rate games they haven't rated yet. We used these estimations to show the user the top games they haven't rated yet as well as the actual estimated rating they might give them.
 
-	%@Ahti, voitko kirjoittaa tähän frontista?
-	
+    We create a item-user matrix from the reviews. By the simple fact that the quantity of boardgames far surpass the number of users, the matrix is very sparse. In our
+    first version, we imputed the missing values with zeros. This lead to the NMF biasing the rating estimations heavily towards 0. We decided to impute the missing values
+    with fancyimpute packages SoftImpute, which is a SVD based imputation algorithm.% LÄHDE: https://www.scopus.com/pages/publications/77956944781?inward=
+    We used scikits nmf implementation.
+
+    We selected the NMF rank hyperparameter via testing multiple rank values, and comparing the root mean square error of the models. In our final version the rank of the NMF
+    was 25. We did not tune the SoftImpute hyperparameters due to timeconstrainst, but this and other aspects to improve upon are mentioned in the discussion.
+
 	Regarding the UI we kept it very simple with a Boostrap table to show the details for each game and a Chart.js bar table to show the rating distribution within our dataset. Otherwise no other visualization methods were used in our project.
 	
 	
@@ -115,10 +122,13 @@
 	\section{Results}\label{results}
 	
 	
-	% Linkki nettisivulle ja selostetaan toiminnallisuudesta jotain, jos joitain jäänyt kertomatta metodeissa. Tämä voi tarvittaessa olla lyhyt
-	
-	%kuinka hyvin nmf toimi, virhe
-	%@Ahti
+	The website can be found on http://ec2-13-60-174-144.eu-north-1.compute.amazonaws.com/. The user can write their, or someone elses username in the field, the
+    website lists usernames that match the query which are already available in our scraped database. If the user proceeds with a username that is not in our scraped
+    data, a warning is shown, that their BGG user must have at least 1 review, and that the computation will take time. Given the lack of computational power on the EC2
+    instance the app is running on, the recalculation of the recommendation matrix takes multiple minutes. The user is then directed to a page where they can view their
+    top recommendations.
+
+    The model (NMF) in testing had a RMSE of ~0.267 on our dataset, which given that the values are from 1-10, is an acceptable error rate.
 	
 	
 	
@@ -145,6 +155,13 @@
 	Generally the project ended up being less complex than we had wished, though we didn't exactly depart from our initial plan. The final state of the project quite close to the minimum viable product we were expecting to get. Mainly we weren't able to implement the ideas we for non-users being able to also get recommendations. Other ideas we had included more visualization as well as using the categories in some meaningful way. Ultimately this was mainly due to scheduling problems as well as partly due to setting such a clear division for work tasks. Perhaps if we had found time to work as a team rather than waiting on each person to finish their indivitual tasks, we could've progressed more steadily and had time for other additions.
 
 	%@Ahti,mitä sinä opit tai mitä pohdintoja nousi tätä tehdessä?
+
+    The application as it stands, does not validate the SoftImpute results, and probably with correct tuning of the SoftImpute hyperparameters, the NMF portion of
+    the algorithm stack could entirely be removed. While researching the options of handling the missing values in the item-user matrix, we also considered using a weighted
+    NMF. However this didn't have an actively maintained library on python, so it would have required us to create the implementation ourself.
+    
+    Regarding the data scraping process, now in retrospect it would have probably been easier to scrape reviews via games, not via users. since the games are more easily
+    discoverable.
 	
 	%%%% Broader implications / Comparison or synthesis with results from literature
 	%% how does relate to other research questions?
